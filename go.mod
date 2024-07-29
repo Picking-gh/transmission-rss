@@ -1,4 +1,4 @@
-module github.com/trishika/transmission-rss
+module github.com/Picking-gh/transmission-rss
 
 go 1.22.5
 
