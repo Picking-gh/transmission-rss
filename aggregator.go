@@ -8,9 +8,9 @@ package main
 
 import (
 	"log"
-)
 
-import "github.com/mmcdole/gofeed"
+	"github.com/mmcdole/gofeed"
+)
 
 // Aggregator is a RSS aggregator object
 type Aggregator struct {
@@ -52,7 +52,9 @@ func (a *Aggregator) GetNewTorrentURL() []string {
 
 	for _, item := range items {
 		log.Println(item.Title)
-		urls = append(urls, item.Link)
+		for _, enclosure := range item.Enclosures {
+			urls = append(urls, enclosure.URL)
+		}
 	}
 	if len(items) > 0 {
 		a.cache.Set(a.url, items[0].GUID)

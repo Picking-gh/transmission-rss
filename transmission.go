@@ -7,23 +7,24 @@
 package main
 
 import (
-	"fmt"
+	"context"
 	"log"
-)
 
-import "github.com/trishika/transmission-go"
+	"github.com/hekmon/transmissionrpc/v2"
+)
 
 // Transmission handle the transmission api request
 type Transmission struct {
-	client *transmission.Client
+	client *transmissionrpc.Client
 }
 
 // NewTransmission return a new Transmission object
-func NewTransmission(url string) *Transmission {
-	conf := transmission.Config{
-		Address: fmt.Sprintf("http://%s/transmission/rpc", url),
-	}
-	t, err := transmission.New(conf)
+func NewTransmission(host string, port uint16, user string, pswd string) *Transmission {
+
+	t, err := transmissionrpc.New(host, user, pswd,
+		&transmissionrpc.AdvancedConfig{
+			Port: 9091,
+		})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,8 +33,10 @@ func NewTransmission(url string) *Transmission {
 
 // Add add a new magnet link to the transmission server
 func (t *Transmission) Add(magnet string) error {
-	_, err := t.client.Add(magnet)
-	if err != transmission.ErrDuplicateTorrent {
+	_, err := t.client.TorrentAdd(context.TODO(), transmissionrpc.TorrentAddPayload{
+		Filename: &magnet,
+	})
+	if err != nil {
 		return err
 	}
 	return nil

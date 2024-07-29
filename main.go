@@ -9,10 +9,10 @@ package main
 import (
 	"fmt"
 	"os"
-)
 
-import "github.com/jessevdk/go-flags"
-import "github.com/jasonlvhit/gocron"
+	"github.com/jasonlvhit/gocron"
+	"github.com/jessevdk/go-flags"
+)
 
 type options struct {
 	Config string `short:"c" long:"conf" description:"Config file" default:"/etc/transmission-rss.conf"`
@@ -33,8 +33,7 @@ func main() {
 
 	config := NewConfig(opt.Config)
 
-	client := NewTransmission(fmt.Sprintf("%s:%s",
-		config.Server.Host, config.Server.Port))
+	client := NewTransmission(config.Server.Host, config.Server.Port, config.Server.User, config.Server.Pswd)
 
 	cache := NewCache()
 
@@ -44,7 +43,10 @@ func main() {
 
 			urls := aggregator.GetNewTorrentURL()
 			for _, url := range urls {
-				client.Add(url)
+				err := client.Add(url)
+				if err != nil {
+					fmt.Println(err)
+				}
 			}
 		}
 	}
