@@ -12,9 +12,9 @@ import (
 	"log"
 	"os"
 	"path"
-)
 
-import "github.com/atrox/homedir"
+	"github.com/atrox/homedir"
+)
 
 const cachePath = "~/.cache/transmission-rss.gob"
 
@@ -36,7 +36,7 @@ func NewCache() *Cache {
 
 	err = readGob(cache.path, &cache.data)
 	if err != nil {
-		log.Println("Empty cache")
+		fmt.Println("Empty cache")
 		cache.data = make(map[string]string)
 	}
 	return &cache
@@ -69,7 +69,7 @@ func writeGob(filePath string, object interface{}) error {
 		log.Fatal(err)
 	}
 	encoder := gob.NewEncoder(file)
-	encoder.Encode(object)
+	err = encoder.Encode(object)
 	file.Close()
 	return err
 }

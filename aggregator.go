@@ -7,6 +7,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/mmcdole/gofeed"
@@ -24,7 +25,8 @@ func NewAggregator(url string, cache *Cache) *Aggregator {
 	fp := gofeed.NewParser()
 	feed, err := fp.ParseURL(url)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("Fetching [%s] failed, %s", url, err)
+		return nil
 	}
 	return &Aggregator{url, feed, cache}
 }
@@ -48,10 +50,10 @@ func (a *Aggregator) GetNewTorrentURL() []string {
 	urls := make([]string, 0)
 
 	items := a.GetNewItems()
-	log.Printf("%d new items\n", len(items))
+	fmt.Printf("Fetching [%s] got %d new item(s)\n", a.url, len(items))
 
 	for _, item := range items {
-		log.Println(item.Title)
+		fmt.Println(item.Title)
 		for _, enclosure := range item.Enclosures {
 			if enclosure.Type == "application/x-bittorrent" {
 				urls = append(urls, enclosure.URL)

@@ -7,7 +7,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/jasonlvhit/gocron"
@@ -40,12 +40,15 @@ func main() {
 	update := func() {
 		for _, feed := range config.Feeds {
 			aggregator := NewAggregator(feed, cache)
+			if aggregator == nil {
+				continue
+			}
 
 			urls := aggregator.GetNewTorrentURL()
 			for _, url := range urls {
 				err := client.Add(url)
 				if err != nil {
-					fmt.Println(err)
+					log.Printf("Adding [%s] failed, %s", url, err)
 				}
 			}
 		}
