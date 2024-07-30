@@ -23,7 +23,7 @@ func NewTransmission(host string, port uint16, user string, pswd string) *Transm
 
 	t, err := transmissionrpc.New(host, user, pswd,
 		&transmissionrpc.AdvancedConfig{
-			Port: 9091,
+			Port: port,
 		})
 	if err != nil {
 		log.Fatal(err)

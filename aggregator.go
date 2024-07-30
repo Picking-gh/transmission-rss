@@ -53,7 +53,9 @@ func (a *Aggregator) GetNewTorrentURL() []string {
 	for _, item := range items {
 		log.Println(item.Title)
 		for _, enclosure := range item.Enclosures {
-			urls = append(urls, enclosure.URL)
+			if enclosure.Type == "application/x-bittorrent" {
+				urls = append(urls, enclosure.URL)
+			}
 		}
 	}
 	if len(items) > 0 {
