@@ -7,7 +7,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/mmcdole/gofeed"
@@ -50,10 +49,14 @@ func (a *Aggregator) GetNewTorrentURL() []string {
 	urls := make([]string, 0)
 
 	items := a.GetNewItems()
-	fmt.Printf("Fetching [%s] got %d new item(s)\n", a.url, len(items))
+	if len(items) == 0 {
+		return urls
+	}
+
+	log.Printf("Fetching [%s] got %d new item(s)\n", a.url, len(items))
 
 	for _, item := range items {
-		fmt.Println(item.Title)
+		log.Println(item.Title)
 		for _, enclosure := range item.Enclosures {
 			if enclosure.Type == "application/x-bittorrent" {
 				urls = append(urls, enclosure.URL)

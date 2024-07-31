@@ -36,7 +36,7 @@ func NewCache() *Cache {
 
 	err = readGob(cache.path, &cache.data)
 	if err != nil {
-		fmt.Println("Empty cache")
+		log.Println("Empty cache")
 		cache.data = make(map[string]string)
 	}
 	return &cache
