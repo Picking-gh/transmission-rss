@@ -63,8 +63,6 @@ func (a *Aggregator) GetNewTorrentURL() []string {
 			}
 		}
 	}
-	if len(items) > 0 {
-		a.cache.Set(a.url, items[0].GUID)
-	}
+	a.cache.Set(a.url, items[0].GUID)
 	return urls
 }
